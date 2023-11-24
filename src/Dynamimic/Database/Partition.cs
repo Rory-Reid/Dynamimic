@@ -1,13 +1,14 @@
 using System.Net;
 using Amazon.DynamoDBv2.Model;
 
-namespace Dynamimic;
+namespace Dynamimic.Database;
 
 public class Partition
 {
     private readonly string keyValue;
     private readonly TableKey? sortKey;
     private Dictionary<string, TableItem> items = new();
+
     public Partition(string keyValue, TableKey? sortKey = null)
     {
         this.keyValue = keyValue;
@@ -55,7 +56,7 @@ public class Partition
             {
                 if (itemToProject?.Attributes.TryGetValue(attribute, out var value) == true)
                 {
-                    projection[attribute] = Copy(value);
+                    projection[attribute] = value.Copy();
                 }
             }
 
@@ -64,23 +65,4 @@ public class Partition
     }
 
     public int ItemCount => this.items.Count;
-    
-    private static AttributeValue Copy(AttributeValue from)
-    {
-        return from switch
-        {
-            // TODO proper copy of all things
-            {S.Length: > 0} => new AttributeValue {S = from.S}, // Good
-            {N.Length: > 0} => new AttributeValue {N = from.N}, // Good?
-            {IsLSet: true} => new AttributeValue {L = from.L}, // Bad
-            {IsMSet: true} => new AttributeValue {M = from.M}, // Bad
-            {IsBOOLSet: true} => new AttributeValue {BOOL = from.BOOL}, // Good?
-            {B: {Length: > 0}} => new AttributeValue {B = from.B}, // Bad
-            {SS: {Count: > 0}} => new AttributeValue {SS = from.SS}, // Bad
-            {NS: {Count: > 0}} => new AttributeValue {NS = from.NS}, // Bad
-            {BS: {Count: > 0}} => new AttributeValue {BS = from.BS}, // Bad
-            {NULL: true} => new AttributeValue {NULL = true}, // ???
-            _ => throw new InvalidOperationException()
-        };
-    }
 }

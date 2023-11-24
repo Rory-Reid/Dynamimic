@@ -2,9 +2,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using Amazon.Runtime;
 
-namespace Dynamimic;
+namespace Dynamimic.Database;
 
 public class Table
 {

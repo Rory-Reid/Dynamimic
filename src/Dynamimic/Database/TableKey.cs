@@ -1,7 +1,7 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 
-namespace Dynamimic;
+namespace Dynamimic.Database;
 
 public record TableKey(string Name, ScalarAttributeType Type)
 {
